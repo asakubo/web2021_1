@@ -2,10 +2,10 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('test2.db');
 
 let schema = `
-create table player(
+create table clubs(
   id integer primary key,
   name text not null
-  club_id integer not null
+
 );
 `
 

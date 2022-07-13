@@ -2,7 +2,7 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('test2.db');
 
 let sql = `
-select player.id, player.name,club.name as name2 from player inner join club on player.club_id=club.id
+select players.id,players.name,players.national,players.number,clubs.name as name2 from players inner join clubs on players.club_id=clubs.id order by players.club_id
 `
 
 db.serialize( () => {
@@ -12,7 +12,7 @@ db.serialize( () => {
 			return;
 		}
 		for( let data of row ) {
-			console.log( data.id + ' : ' + data.name +':' + data.name2);
+			console.log(data.id+':'+data.name+':'+data.national +':'+data.name2+':'+data.number);
 		}
 	});
 });
