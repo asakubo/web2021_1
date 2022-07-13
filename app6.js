@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('test.db');
+const db = new sqlite3.Database('test2.db');
 
 app.set('view engine', 'ejs');
 app.use("/public", express.static(__dirname + "/public"));
@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 
 app.get("/db", (req, res) => {
     db.serialize( () => {
-        db.all("select id, 都道府県, 人口 from example;", (error, row) => {
+        db.all("select players.id,players.name,players.national,players.number,clubs.name as name2 from players  inner join clubs on players.club_id=clubs.id order by clubs.name ,players.number;", (error, row) => {
             if( error ) {
                 res.render('show', {mes:"エラーです"});
             }
@@ -22,18 +22,19 @@ app.get("/db", (req, res) => {
         })
     })
 })
+
 app.get("/top", (req, res) => {
     //console.log(req.query.pop);    // ①
     let desc = "";
     if( req.query.desc ) desc = " desc";
-    let sql = "select id, 都道府県, 人口 from example order by 人口" + desc + " limit " + req.query.pop + ";";
-    //console.log(sql);    // ②
+    let sql = "select players.id, players.name, players.number,clubs.name as name2 from players inner join clubs on players.club_id = clubs.id" + desc + " where players.number = " + req.query.pop + ";";
+    console.log(sql);    // ②
     db.serialize( () => {
         db.all(sql, (error, data) => {
             if( error ) {
                 res.render('show', {mes:"エラーです"});
             }
-            //console.log(data);    // ③
+            console.log(data);    // ③
             res.render('select', {data:data});
         })
     })
